@@ -19,11 +19,11 @@ namespace EfCoreExtension.Utils
 
             public unsafe void Restore()
             {
-//#if DEBUG
+#if DEBUG
                 *(int*)Location = (int)OriginalValue;
-/*#else
+#else
                 *(IntPtr*)Location = OriginalValue;
-#endif*/
+#endif
             }
         }
 
@@ -46,7 +46,7 @@ namespace EfCoreExtension.Utils
                 tar = classStart + IntPtr.Size * index;
             }
             var inj = methodToInject.MethodHandle.Value + 8;
-//#if DEBUG
+#if DEBUG
             tar = *(IntPtr*)tar + 1;
             inj = *(IntPtr*)inj + 1;
             state.Location = tar;
@@ -54,12 +54,12 @@ namespace EfCoreExtension.Utils
 
             *(int*)tar = *(int*)inj + (int)(long)inj - (int)(long)tar;
             return state;
-/*#else
+#else
             state.Location = tar;
             state.OriginalValue = *(IntPtr*)tar;
             * (IntPtr*)tar = *(IntPtr*)inj;
             return state;
-#endif*/
+#endif
         }
 
         /// <summary>

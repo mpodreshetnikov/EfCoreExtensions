@@ -16,6 +16,16 @@ namespace EfCoreExtensionTests.Utils
             return x - y;
         }
 
+        private static int SXPlusY(int x, int y)
+        {
+            return x + y;
+        }
+
+        private static int SXSubstractY(int x, int y)
+        {
+            return x - y;
+        }
+
         [Fact]
         public void Replace_XPlusYWithXSubstractY_MethodIsReplaced()
         {
@@ -51,6 +61,25 @@ namespace EfCoreExtensionTests.Utils
             // Assert
             var actual = XPlusY(x, y);
             var expected = x + y;
+
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void Replace_ForStaticsMethods_XPlusYWithXSubstractY_MethodIsReplaced()
+        {
+            // Arrange
+            var x = 3;
+            var y = 2;
+            var xPlusYMethodInfo = ReflectionUtils.GetMethodInfo(() => SXPlusY(x, y));
+            var xSubstractYMethodInfo = ReflectionUtils.GetMethodInfo(() => SXSubstractY(x, y));
+
+            // Action
+            using var state = ReflectionUtils.Replace(xPlusYMethodInfo, xSubstractYMethodInfo);
+
+            // Assert
+            var actual = SXPlusY(x, y);
+            var expected = SXSubstractY(x, y);
 
             actual.Should().Be(expected);
         }

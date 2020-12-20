@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EfCoreExtension.Abstractions;
 using EfCoreExtension.Utils;
 using EfCoreExtensions.ValueConverters;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +15,11 @@ namespace EfCoreExtension.Features.EncryptedMigration
     /// <summary>
     /// Migrator that provide logic for updating old values during migrations with encrypting values.
     /// </summary>
-    public static class EncryptingMigrator
+    internal static class EncryptingMigrator
     {
         private static IEnumerable<string> pendingMigrations;
         private static readonly List<ReflectionUtils.MethodReplacementState> methodReplacementStates = new List<ReflectionUtils.MethodReplacementState>();
         private static readonly List<EncryptedProperty> EncryptedProperties = new List<EncryptedProperty>();
-
-        /// <summary>
-        /// Construct the migrator and add it to the application flow.
-        /// Be sure that you create <see cref="EncryptingMigrator"/> before database migrations are applied.
-        /// </summary>
-        static EncryptingMigrator()
-        {
-            SubstituteMigrateMethods();
-        }
 
         internal static void AddEncryptedProperty(EncryptedProperty encryptedProperty)
         {
@@ -51,22 +41,7 @@ namespace EfCoreExtension.Features.EncryptedMigration
             }
         }
 
-        private static void SubstituteMigrateMethods()
-        {
-            // Sync.
-            var updatedMigrateMethodInfo = ReflectionUtils.GetMethodInfo(() => UpdatedMigrateMethod(default));
-            var migrateMethodInfo = ReflectionUtils.GetMethodInfo(() => RelationalDatabaseFacadeExtensions.Migrate(default));
-            methodReplacementStates.Add(ReflectionUtils.Replace(migrateMethodInfo, updatedMigrateMethodInfo));
-
-            // Async.
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            var updatedMigrateAsyncMethodInfo = ReflectionUtils.GetMethodInfo(() => UpdatedMigrateAsyncMethod(default, default));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            var migrateMethodAsyncInfo = ReflectionUtils.GetMethodInfo(() => RelationalDatabaseFacadeExtensions.MigrateAsync(default, default));
-            methodReplacementStates.Add(ReflectionUtils.Replace(migrateMethodAsyncInfo, updatedMigrateAsyncMethodInfo));
-        }
-
-        private static void UpdatedMigrateMethod(DatabaseFacade databaseFacade)
+        internal static void MigrateWithEncriptingMigrator(DatabaseFacade databaseFacade)
         {
             var dbContext = (databaseFacade as IDatabaseFacadeDependenciesAccessor).Context;
             pendingMigrations = dbContext.Database.GetPendingMigrations();
@@ -74,7 +49,7 @@ namespace EfCoreExtension.Features.EncryptedMigration
             MigrateEncryptedPropertiesAsync(dbContext).GetAwaiter().GetResult();
         }
 
-        private static async Task UpdatedMigrateAsyncMethod(DatabaseFacade databaseFacade, CancellationToken cancellationToken = default)
+        internal static async Task MigrateWithEncriptingMigratorAsync(DatabaseFacade databaseFacade, CancellationToken cancellationToken = default)
         {
             var dbContext = (databaseFacade as IDatabaseFacadeDependenciesAccessor).Context;
             pendingMigrations = dbContext.Database.GetPendingMigrations();
@@ -89,26 +64,22 @@ namespace EfCoreExtension.Features.EncryptedMigration
         {
             foreach (var encryptedProperty in EncryptedProperties)
             {
-                // Apply encrypted conversion.
-                var cryptoValueConverter = new CryptoValueConverter(encryptedProperty.CryptoConverter);
-                encryptedProperty.PropertyBuilder.HasConversion(cryptoValueConverter);
-
                 // Convert old data.
                 if (!(encryptedProperty.MigrationId is null))
                 {
-                    var propertyMetadata = encryptedProperty.PropertyBuilder.Metadata;
-
-                    var entityType = dbContext.Model.FindEntityType(propertyMetadata.DeclaringEntityType.ClrType.FullName);
-
-                    var tableName = entityType.GetAnnotation("Relational:TableName").Value;
-                    var pkProps = entityType.FindPrimaryKey().Properties.Select(_ => _.Name);
-                    var targetColumnName = propertyMetadata.Name;
-
                     // Check that migration exists or not.
                     var isValuesNeedsToBeEncrypted = pendingMigrations.Contains(encryptedProperty.MigrationId);
 
                     if (isValuesNeedsToBeEncrypted)
                     {
+                        var propertyMetadata = encryptedProperty.PropertyBuilder.Metadata;
+
+                        var entityType = dbContext.Model.FindEntityType(propertyMetadata.DeclaringEntityType.ClrType.FullName);
+
+                        var tableName = entityType.GetAnnotation("Relational:TableName").Value;
+                        var pkProps = entityType.FindPrimaryKey().Properties.Select(_ => _.Name);
+                        var targetColumnName = propertyMetadata.Name;
+
                         dbContext.Database.OpenConnection();
 
                         // Select rows that needs to be updated with encryption.

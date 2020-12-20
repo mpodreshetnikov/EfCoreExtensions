@@ -9,8 +9,8 @@ using TestApp;
 namespace TestApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201220073146_AddUser")]
-    partial class AddUser
+    [Migration("20201220141940_EncryptName")]
+    partial class EncryptName
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

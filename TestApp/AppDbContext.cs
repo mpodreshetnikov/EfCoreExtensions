@@ -21,7 +21,7 @@ namespace TestApp
         {
             modelBuilder.Entity<User>()
                 .Property(u => u.Name)
-                .EncryptedWith(cryptoConverter, maxLength: 20);
+                .EncryptedWith(cryptoConverter, maxLength: 20, migrationType: typeof(Migrations.EncryptName));
 
             base.OnModelCreating(modelBuilder);
         }
