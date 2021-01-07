@@ -18,7 +18,6 @@ namespace EfCoreExtension.Features.EncryptedMigration
     internal static class EncryptingMigrator
     {
         private static IEnumerable<string> pendingMigrations;
-        private static readonly List<ReflectionUtils.MethodReplacementState> methodReplacementStates = new List<ReflectionUtils.MethodReplacementState>();
         private static readonly List<EncryptedProperty> EncryptedProperties = new List<EncryptedProperty>();
 
         internal static void AddEncryptedProperty(EncryptedProperty encryptedProperty)
@@ -109,10 +108,6 @@ namespace EfCoreExtension.Features.EncryptedMigration
             }
 
             EncryptedProperties.Clear();
-            foreach (var methodReplacementState in methodReplacementStates)
-            {
-                methodReplacementState.Dispose();
-            }
         }
     }
 }

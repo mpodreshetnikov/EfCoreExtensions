@@ -18,7 +18,7 @@ namespace EfCoreExtensions.Extensions
         /// </summary>
         /// <param name="propertyBuilder">Property.</param>
         /// <param name="migrationType">Type of Migration that property started to be encrypted from.</param>
-        public static PropertyBuilder<string> EncryptedWith(this PropertyBuilder<string> propertyBuilder, ICryptoConverter cryptoConverter, int? maxLength = default, Type migrationType = default)
+        public static PropertyBuilder EncryptedWith(this PropertyBuilder<string> propertyBuilder, ICryptoConverter cryptoConverter, int? maxLength = default, Type migrationType = default)
         {
             ArgumentUtils.ThrowIfNull(propertyBuilder, nameof(propertyBuilder));
             ArgumentUtils.ThrowIfNull(cryptoConverter, nameof(cryptoConverter));
@@ -51,10 +51,10 @@ namespace EfCoreExtensions.Extensions
             return propertyBuilder;
         }
 
-        public static PropertyBuilder<string> EncryptedWith<T>(this PropertyBuilder<string> propertyBuilder, int? maxLength = default, Type migrationType = default)
-            where T : ICryptoConverter, new()
+        public static PropertyBuilder EncryptedWith<TEncryptor>(this PropertyBuilder<string> propertyBuilder, int? maxLength = default, Type migrationType = default)
+            where TEncryptor : ICryptoConverter, new()
         {
-            return EncryptedWith(propertyBuilder, new T(), maxLength, migrationType);
+            return EncryptedWith(propertyBuilder, new TEncryptor(), maxLength, migrationType);
         }
     }
 }

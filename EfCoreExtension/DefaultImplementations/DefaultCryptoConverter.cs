@@ -8,6 +8,9 @@ using EfCoreExtension.Utils;
 
 namespace EfCoreExtension.DefaultImplementations
 {
+    /// <summary>
+    /// Cryptographic converter using overloaded AES encryption.
+    /// </summary>
     public sealed class DefaultCryptoConverter : ICryptoConverter
     {
         private readonly byte[] cryptKey;
@@ -35,6 +38,7 @@ namespace EfCoreExtension.DefaultImplementations
             return aes;
         }
 
+        /// <inheritdoc/>
         public int GetMaximalOverheadedLength(int originalLength)
         {
             using var aes = BuildAes();
@@ -179,7 +183,7 @@ namespace EfCoreExtension.DefaultImplementations
             }
 
             // Return plain text. The first character is always '\n' character.
-            return Encoding.UTF8.GetString(plainTextStream.ToArray()).Substring(1);
+            return Encoding.UTF8.GetString(plainTextStream.ToArray())[1..];
         }
     }
 }

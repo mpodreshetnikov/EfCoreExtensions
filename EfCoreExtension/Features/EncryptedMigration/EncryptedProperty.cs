@@ -13,6 +13,9 @@ namespace EfCoreExtension.Features.EncryptedMigration
         /// </summary>
         public PropertyBuilder<string> PropertyBuilder { get; set; }
 
+        /// <summary>
+        /// Crypto converter.
+        /// </summary>
         public ICryptoConverter CryptoConverter { get; set; }
 
         /// <summary>
