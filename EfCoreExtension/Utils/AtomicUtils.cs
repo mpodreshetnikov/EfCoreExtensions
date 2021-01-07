@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("EfCoreExtensionTests")]
 
-namespace EfCoreExtension.Utils
+namespace EfCoreExtensions.Utils
 {
     internal static class AtomicUtils
     {

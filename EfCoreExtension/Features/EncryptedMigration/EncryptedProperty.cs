@@ -1,7 +1,7 @@
-﻿using EfCoreExtension.Abstractions;
+﻿using EfCoreExtensions.EncryptedMigration;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EfCoreExtension.Features.EncryptedMigration
+namespace EfCoreExtensions.Features.EncryptedMigration
 {
     /// <summary>
     /// Object for encrypted property.

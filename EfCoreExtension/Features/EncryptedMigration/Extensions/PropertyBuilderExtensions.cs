@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using EfCoreExtension.Abstractions;
-using EfCoreExtension.Features.EncryptedMigration;
-using EfCoreExtension.Utils;
+using EfCoreExtensions.Features.EncryptedMigration;
+using EfCoreExtensions.Utils;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EfCoreExtensions.Extensions
+namespace EfCoreExtensions.EncryptedMigration
 {
     /// <summary>
     /// Extensions for <see cref="PropertyBuilder"/>.
@@ -16,7 +15,9 @@ namespace EfCoreExtensions.Extensions
         /// <summary>
         /// Apply encryption for the property. If migration is provided then apply old value encryption during the migration.
         /// </summary>
-        /// <param name="propertyBuilder">Property.</param>
+        /// <param name="propertyBuilder">Property builder.</param>
+        /// <param name="maxLength">Max length of the property.</param>
+        /// <param name="cryptoConverter">Crypto converter.</param>
         /// <param name="migrationType">Type of Migration that property started to be encrypted from.</param>
         public static PropertyBuilder EncryptedWith(this PropertyBuilder<string> propertyBuilder, ICryptoConverter cryptoConverter, int? maxLength = default, Type migrationType = default)
         {
@@ -51,10 +52,17 @@ namespace EfCoreExtensions.Extensions
             return propertyBuilder;
         }
 
-        public static PropertyBuilder EncryptedWith<TEncryptor>(this PropertyBuilder<string> propertyBuilder, int? maxLength = default, Type migrationType = default)
-            where TEncryptor : ICryptoConverter, new()
+        /// <summary>
+        /// Apply encryption for the property. If migration is provided then apply old value encryption during the migration.
+        /// </summary>
+        /// <param name="propertyBuilder">Property.</param>
+        /// <param name="maxLength">Max length of the property.</param>
+        /// <param name="migrationType">Type of Migration that property started to be encrypted from.</param>
+        /// <typeparam name="TCryptoConverter">Crypto converter type.</typeparam>
+        public static PropertyBuilder EncryptedWith<TCryptoConverter>(this PropertyBuilder<string> propertyBuilder, int? maxLength = default, Type migrationType = default)
+            where TCryptoConverter : ICryptoConverter, new()
         {
-            return EncryptedWith(propertyBuilder, new TEncryptor(), maxLength, migrationType);
+            return EncryptedWith(propertyBuilder, new TCryptoConverter(), maxLength, migrationType);
         }
     }
 }

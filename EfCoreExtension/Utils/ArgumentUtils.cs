@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EfCoreExtension.Utils
+namespace EfCoreExtensions.Utils
 {
     internal static class ArgumentUtils
     {

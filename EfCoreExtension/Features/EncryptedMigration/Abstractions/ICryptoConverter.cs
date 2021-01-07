@@ -1,4 +1,4 @@
-﻿namespace EfCoreExtension.Abstractions
+﻿namespace EfCoreExtensions.EncryptedMigration
 {
     /// <summary>
     /// Cryptographic converter.

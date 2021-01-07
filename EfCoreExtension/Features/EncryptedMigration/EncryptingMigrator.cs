@@ -4,13 +4,13 @@ using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EfCoreExtension.Utils;
-using EfCoreExtensions.ValueConverters;
+using EfCoreExtensions.EncryptedMigration.ValueConverters;
+using EfCoreExtensions.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace EfCoreExtension.Features.EncryptedMigration
+namespace EfCoreExtensions.Features.EncryptedMigration
 {
     /// <summary>
     /// Migrator that provide logic for updating old values during migrations with encrypting values.

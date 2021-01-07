@@ -1,6 +1,4 @@
-﻿using EfCoreExtension.Abstractions;
-using EfCoreExtension.DefaultImplementations;
-using EfCoreExtensions.Extensions;
+﻿using EfCoreExtensions.EncryptedMigration;
 using Microsoft.EntityFrameworkCore;
 using TestApp.Entities;
 

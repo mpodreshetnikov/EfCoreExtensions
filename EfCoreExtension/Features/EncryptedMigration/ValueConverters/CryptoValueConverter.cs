@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
-using EfCoreExtension.Abstractions;
 using EfCoreExtension.Exceptions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace EfCoreExtensions.ValueConverters
+namespace EfCoreExtensions.EncryptedMigration.ValueConverters
 {
     /// <summary>
     /// Value converter to store data in DB encrypted.

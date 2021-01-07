@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace EfCoreExtension.Utils
+namespace EfCoreExtensions.Utils
 {
     internal static class ReflectionUtils
     {

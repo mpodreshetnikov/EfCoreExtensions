@@ -2,11 +2,10 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using EfCoreExtension.Abstractions;
 using EfCoreExtension.Exceptions;
-using EfCoreExtension.Utils;
+using EfCoreExtensions.Utils;
 
-namespace EfCoreExtension.DefaultImplementations
+namespace EfCoreExtensions.EncryptedMigration
 {
     /// <summary>
     /// Cryptographic converter using overloaded AES encryption.

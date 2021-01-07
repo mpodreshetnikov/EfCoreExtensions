@@ -1,4 +1,4 @@
-﻿using EfCoreExtension.Utils;
+﻿using EfCoreExtensions.Utils;
 using FluentAssertions;
 using Xunit;
 

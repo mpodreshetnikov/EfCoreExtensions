@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using EfCoreExtension.Extensions;
+using EfCoreExtensions.EncryptedMigration;
 using TestApp.Entities;
 
 namespace TestApp
