@@ -13,11 +13,27 @@ namespace EfCoreExtensions.Utils
             return argument;
         }
 
-        public static void ThrowIfNull<T>(T argument, string name)
+        public static void MustBeNotNull<T>(T argument, string name)
         {
             if (argument is null)
             {
                 throw new ArgumentNullException(name);
+            }
+        }
+
+        public static void MustBePositive(double argument, string name, string message = "Must be positive.")
+        {
+            if (argument <= 0)
+            {
+                throw new ArgumentNullException(name, message);
+            }
+        }
+
+        public static void MustBePositiveOrZero(double argument, string name, string message = "Must be positive or zero.")
+        {
+            if (argument < 0)
+            {
+                throw new ArgumentNullException(name, message);
             }
         }
     }
