@@ -13,7 +13,7 @@ namespace EfCoreExtensions.EncryptedMigration
     public static class PropertyBuilderExtensions
     {
         /// <summary>
-        /// Apply encryption for the property. If migration is provided then apply old value encryption during the migration.
+        /// Apply encryption for the property. If migration is provided then apply old value encryption during the migration. Ensure that you call <see cref="DatabaseFacadeExtensions.MigrateWithEncryptingMigrator"/> or <see cref="DatabaseFacadeExtensions.MigrateWithEncryptingMigratorAsync"/> on the context.
         /// </summary>
         /// <param name="propertyBuilder">Property builder.</param>
         /// <param name="maxLength">Max length of the property.</param>
@@ -53,7 +53,7 @@ namespace EfCoreExtensions.EncryptedMigration
         }
 
         /// <summary>
-        /// Apply encryption for the property. If migration is provided then apply old value encryption during the migration.
+        /// Apply encryption for the property. If migration is provided then apply old value encryption during the migration. Ensure that you call <see cref="DatabaseFacadeExtensions.MigrateWithEncryptingMigrator"/> or <see cref="DatabaseFacadeExtensions.MigrateWithEncryptingMigratorAsync"/> on the context.
         /// </summary>
         /// <param name="propertyBuilder">Property.</param>
         /// <param name="maxLength">Max length of the property.</param>
