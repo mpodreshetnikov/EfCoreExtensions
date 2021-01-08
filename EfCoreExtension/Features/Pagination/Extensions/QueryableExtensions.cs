@@ -13,16 +13,16 @@ namespace EfCoreExtensions.Pagination
         /// <param name="pageElementsCount">Count of elements on a page.</param>
         public static IQueryable<T> TakePage<T>(this IQueryable<T> query, int page, int pageElementsCount)
         {
-            return TakeSomePages(query, page, pageElementsCount);
+            return TakePages(query, page, pageElementsCount);
         }
 
         /// <summary>
-        /// Take page of entities.
+        /// Take a few pages of entities.
         /// </summary>
-        /// <param name="fromPage">Page to take from starting from 1.</param>
+        /// <param name="fromPage">Page to take from (starting from 1).</param>
         /// <param name="pageElementsCount">Count of elements on a page.</param>
         /// <param name="pagesCount">Count of pages to take.</param>
-        public static IQueryable<T> TakeSomePages<T>(this IQueryable<T> query, int fromPage, int pageElementsCount, int pagesCount = 1)
+        public static IQueryable<T> TakePages<T>(this IQueryable<T> query, int fromPage, int pageElementsCount, int pagesCount = 1)
         {
             ArgumentUtils.MustBeNotNull(query, nameof(query));
             ArgumentUtils.MustBePositive(fromPage, nameof(fromPage));
