@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using EfCoreExtensions.EncryptedMigration;
 using EfCoreExtensions.Pagination;
 using TestApp.Entities;
@@ -7,7 +8,7 @@ namespace TestApp
 {
     internal static class Program
     {
-        private static void Main()
+        private static async Task Main()
         {
             var dbContext = new AppDbContext();
             dbContext.Database.MigrateWithEncryptingMigrator();
@@ -26,8 +27,13 @@ namespace TestApp
                 });
             }
 
-            dbContext.SaveChanges();
-            var users = dbContext.Users.TakePage(1, 10).ToList();
+            await dbContext.SaveChangesAsync();
+            var users = await dbContext.Users.PagedAsync(new PagedQuery
+            {
+                FromPage = 1,
+                PageElementsCount = 10,
+                PagesCount = 3,
+            });
         }
     }
 }
