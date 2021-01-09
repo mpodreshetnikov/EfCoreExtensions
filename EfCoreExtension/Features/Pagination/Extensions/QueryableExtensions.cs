@@ -33,7 +33,7 @@ namespace EfCoreExtensions.Pagination
 
             if (!OrderingReflectionUtils.IsQueryOrdered(query))
             {
-                query = OrderingReflectionUtils.OrderByAnyPropertyOrItself(query);
+                query = OrderingReflectionUtils.OrderByAnything(query);
             }
 
             return query.Skip(--fromPage * pageElementsCount).Take(pageElementsCount * pagesCount);

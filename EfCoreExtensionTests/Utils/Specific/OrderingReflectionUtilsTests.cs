@@ -55,7 +55,7 @@ namespace EfCoreExtensionTests.Utils.Specific
 
             // Action
             var before = OrderingReflectionUtils.IsQueryOrdered(query);
-            query = OrderingReflectionUtils.OrderByAnyPropertyOrItself(query);
+            query = OrderingReflectionUtils.OrderByAnything(query);
             var after = OrderingReflectionUtils.IsQueryOrdered(query);
 
             // Assert
@@ -72,7 +72,7 @@ namespace EfCoreExtensionTests.Utils.Specific
 
             // Action
             var before = OrderingReflectionUtils.IsQueryOrdered(query);
-            query = OrderingReflectionUtils.OrderByAnyPropertyOrItself(query);
+            query = OrderingReflectionUtils.OrderByAnything(query);
             var after = OrderingReflectionUtils.IsQueryOrdered(query);
             var items = query.ToList();
 

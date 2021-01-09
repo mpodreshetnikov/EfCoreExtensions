@@ -34,7 +34,7 @@ namespace EfCoreExtensions.Utils.Specific
             return visitor.orderingMethodFound;
         }
 
-        public static IQueryable<T> OrderByAnyPropertyOrItself<T>(IQueryable<T> query)
+        public static IQueryable<T> OrderByAnything<T>(IQueryable<T> query)
         {
             ArgumentUtils.MustBeNotNull(query, nameof(query));
 
@@ -50,10 +50,10 @@ namespace EfCoreExtensions.Utils.Specific
                     throw new InvalidOperationException($"Type {typeof(T).FullName} doesn't have public properties so cannot be ordered automatically. Order the query before using pagination.", e);
                 }
             }
-            return OrderByFieldOrProperty(query, propertyName);
+            return OrderByPropertyOrField(query, propertyName);
         }
 
-        public static IQueryable<T> OrderByItself<T>(IQueryable<T> query)
+        public static IQueryable<T> OrderByItself<T>(IQueryable<T> query, bool ascending = true)
         {
             ArgumentUtils.MustBeNotNull(query, nameof(query));
 
@@ -64,10 +64,10 @@ namespace EfCoreExtensions.Utils.Specific
 
             var parameterExpression = Expression.Parameter(typeof(T));
             var orderingMemberAccessorExpression = Expression.Lambda(parameterExpression, parameterExpression);
-            return Order(query, orderingMemberAccessorExpression, typeof(T));
+            return Order(query, orderingMemberAccessorExpression, typeof(T), ascending);
         }
 
-        public static IQueryable<T> OrderByFieldOrProperty<T>(IQueryable<T> query, string fieldOrProperty)
+        public static IQueryable<T> OrderByPropertyOrField<T>(IQueryable<T> query, string fieldOrProperty, bool ascending = true)
         {
             ArgumentUtils.MustBeNotNull(query, nameof(query));
             ArgumentUtils.MustBeNotNull(fieldOrProperty, nameof(fieldOrProperty));
@@ -75,17 +75,18 @@ namespace EfCoreExtensions.Utils.Specific
             var parameterExpression = Expression.Parameter(typeof(T));
             var memberAccessExpression = Expression.PropertyOrField(parameterExpression, fieldOrProperty);
             var orderingMemberAccessorExpression = Expression.Lambda(memberAccessExpression, parameterExpression);
-            return Order(query, orderingMemberAccessorExpression, memberAccessExpression.Type);
+            return Order(query, orderingMemberAccessorExpression, memberAccessExpression.Type, ascending);
         }
 
-        private static IQueryable<T> Order<T>(IQueryable<T> query, LambdaExpression orderingMemberAccessorExpression, Type memberType)
+        private static IQueryable<T> Order<T>(IQueryable<T> query, LambdaExpression orderingMemberAccessorExpression, Type memberType, bool ascending)
         {
             var parameterExpression = Expression.Parameter(typeof(IQueryable<T>));
             var orderingMemberAccessorQuoteExpression = Expression.Quote(orderingMemberAccessorExpression);
 
+            var methodName = ascending ? nameof(Queryable.OrderBy) : nameof(Queryable.OrderByDescending);
             var genericMethodInfo = typeof(Queryable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .First(m => m.Name == nameof(Queryable.OrderBy) && m.GetParameters().Length == 2);
+                .First(m => m.Name == methodName && m.GetParameters().Length == 2);
             var methodInfo = genericMethodInfo.MakeGenericMethod(typeof(T), memberType);
 
             var callOrderByMethodExpression = Expression.Call(methodInfo,
