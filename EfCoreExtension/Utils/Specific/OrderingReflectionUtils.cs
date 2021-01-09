@@ -80,7 +80,6 @@ namespace EfCoreExtensions.Utils.Specific
 
         private static IQueryable<T> Order<T>(IQueryable<T> query, LambdaExpression orderingMemberAccessorExpression, Type memberType)
         {
-            // ToDo add cached compiling.
             var parameterExpression = Expression.Parameter(typeof(IQueryable<T>));
             var orderingMemberAccessorQuoteExpression = Expression.Quote(orderingMemberAccessorExpression);
 
