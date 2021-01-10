@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace EfCoreExtensions.Utils
 {
@@ -18,6 +19,22 @@ namespace EfCoreExtensions.Utils
             if (argument is null)
             {
                 throw new ArgumentNullException(name);
+            }
+        }
+
+        public static void AllMustBeNotNull<T>(T argument, string name)
+            where T : IEnumerable
+        {
+            if (argument is null)
+            {
+                throw new ArgumentNullException(name);
+            }
+            foreach (var element in argument)
+            {
+                if (element is null)
+                {
+                    throw new ArgumentException($"All elements of {name} must be not null.", name);
+                }
             }
         }
 
