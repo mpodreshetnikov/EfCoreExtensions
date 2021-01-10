@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using EfCoreExtensions.Ordering;
 
 namespace EfCoreExtensions.Utils.Specific
 {
@@ -94,6 +95,25 @@ namespace EfCoreExtensions.Utils.Specific
 
             var methodCallExpression = Expression.Lambda(callOrderByMethodExpression, parameterExpression);
             return (IQueryable<T>)methodCallExpression.Compile().DynamicInvoke(query);
+        }
+
+        public static bool ApplyAndAcceptOrderQueryFor<T>(OrderQuery orderQuery)
+        {
+            if (orderQuery is null)
+            {
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(orderQuery.PropertyName))
+            {
+                return false;
+            }
+            var properties = typeof(T).GetProperties().Where(p => p.Name.Equals(orderQuery.PropertyName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            if (properties.Count != 1)
+            {
+                throw new InvalidOperationException($"Type {typeof(T)} must contain exactly one property named {orderQuery.PropertyName}.");
+            }
+            orderQuery.PropertyName = properties.Single().Name;
+            return true;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace EfCoreExtensions.Utils
 {
     internal static class ArgumentUtils
     {
-        public static T DefaultIfNull<T>(T argument, T defaultValue = default)
+        public static T DefaultIfNull<T>(ref T argument, T defaultValue = default)
         {
             if (argument is null)
             {

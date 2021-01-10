@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using EfCoreExtensions.EncryptedMigration;
+using EfCoreExtensions.Ordering;
 using EfCoreExtensions.Pagination;
 using TestApp.Entities;
 
@@ -25,15 +26,10 @@ namespace TestApp
                     Name = "Ivan",
                     Age = 12,
                 });
+                await dbContext.SaveChangesAsync();
             }
-
-            await dbContext.SaveChangesAsync();
-            var users = await dbContext.Users.PagedAsync(new PagedQuery
-            {
-                FromPage = 1,
-                PageElementsCount = 10,
-                PagesCount = 3,
-            });
+            
+            var users = dbContext.Users.OrderBy("desc age");
         }
     }
 }
