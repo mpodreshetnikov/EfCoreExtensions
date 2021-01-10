@@ -22,7 +22,7 @@ namespace EfCoreExtensions.Features.EncryptedMigration
 
         internal static void AddEncryptedProperty(EncryptedProperty encryptedProperty)
         {
-            ArgumentUtils.ThrowIfNull(encryptedProperty, nameof(encryptedProperty));
+            ArgumentUtils.MustBeNotNull(encryptedProperty, nameof(encryptedProperty));
             AddConverters(encryptedProperty);
             EncryptedProperties.Add(encryptedProperty);
         }

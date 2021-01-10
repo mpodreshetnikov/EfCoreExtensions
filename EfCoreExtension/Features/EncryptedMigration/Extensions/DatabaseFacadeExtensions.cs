@@ -10,13 +10,13 @@ namespace EfCoreExtensions.EncryptedMigration
     {
         public static void MigrateWithEncryptingMigrator(this DatabaseFacade databaseFacade)
         {
-            ArgumentUtils.ThrowIfNull(databaseFacade, nameof(databaseFacade));
+            ArgumentUtils.MustBeNotNull(databaseFacade, nameof(databaseFacade));
             EncryptingMigrator.MigrateWithEncriptingMigrator(databaseFacade);
         }
 
         public static Task MigrateWithEncryptingMigratorAsync(this DatabaseFacade databaseFacade, CancellationToken cancellationToken = default)
         {
-            ArgumentUtils.ThrowIfNull(databaseFacade, nameof(databaseFacade));
+            ArgumentUtils.MustBeNotNull(databaseFacade, nameof(databaseFacade));
             return EncryptingMigrator.MigrateWithEncriptingMigratorAsync(databaseFacade, cancellationToken);
         }
     }

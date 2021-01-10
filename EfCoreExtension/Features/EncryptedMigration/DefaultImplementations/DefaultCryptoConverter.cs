@@ -22,8 +22,8 @@ namespace EfCoreExtensions.EncryptedMigration
         /// <param name="authKey">Auth key.</param>
         public DefaultCryptoConverter(string cryptKey, string authKey)
         {
-            ArgumentUtils.ThrowIfNull(cryptKey, nameof(cryptKey));
-            ArgumentUtils.ThrowIfNull(authKey, nameof(authKey));
+            ArgumentUtils.MustBeNotNull(cryptKey, nameof(cryptKey));
+            ArgumentUtils.MustBeNotNull(authKey, nameof(authKey));
 
             this.cryptKey = Encoding.UTF8.GetBytes(cryptKey);
             this.authKey = Encoding.UTF8.GetBytes(authKey);
