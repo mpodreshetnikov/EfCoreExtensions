@@ -1,5 +1,7 @@
-﻿using EfCoreExtensions.EncryptedMigration;
+﻿using System;
+using EfCoreExtensions.EncryptedMigration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TestApp.Entities;
 
 namespace TestApp
@@ -18,14 +20,16 @@ namespace TestApp
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .Property(u => u.Name)
-                .EncryptedWith(cryptoConverter, maxLength: 20, migrationType: typeof(Migrations.EncryptName));
+                .Property(u => u.SSN)
+                .EncryptedWith(cryptoConverter, maxLength: 12, migrationType: typeof(Migrations.ImproveTestUserModel));
 
             base.OnModelCreating(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+            optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=TestEfCoreExtensionApplication;Username=eztaxsolver;Password=eztaxsolver");
             base.OnConfiguring(optionsBuilder);
         }

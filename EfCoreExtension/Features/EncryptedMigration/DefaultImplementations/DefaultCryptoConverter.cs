@@ -43,7 +43,7 @@ namespace EfCoreExtensions.EncryptedMigration
             using var aes = BuildAes();
             var blockSizeInBytes = aes.BlockSize / 8;
             const int hmacTagLength = 32;
-            const float base64Multiplicator = 1.35f;
+            const float base64Multiplicator = 1.4f;
 
             var messagePaddedToBlockSizeLength = blockSizeInBytes * Math.Ceiling((float)originalLength / blockSizeInBytes);
 
