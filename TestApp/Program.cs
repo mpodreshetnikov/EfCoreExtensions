@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EfCoreExtensions.EncryptedMigration;
 using EfCoreExtensions.Searching;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,7 @@ namespace TestApp
         {
             var dbContext = new AppDbContext();
             dbContext.Database.MigrateWithEncryptingMigrator();
-                
+
             dbContext.Users.RemoveRange(dbContext.Users);
             var user1 = dbContext.Users.Add(new User
             {

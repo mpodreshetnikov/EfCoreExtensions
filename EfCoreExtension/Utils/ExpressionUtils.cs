@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace EfCoreExtensions.Utils
 {
@@ -26,7 +27,12 @@ namespace EfCoreExtensions.Utils
             }
             memberAccessors.Reverse();
 
-            return MakeConditionalExpression(newParameterExpression ?? expression, defaultValue, memberAccessors);
+            var rootExpression = newParameterExpression
+                ?? (expression is ParameterExpression
+                    ? expression
+                    : throw new InvalidOperationException("Provided member access chain is invalid."));
+
+            return MakeConditionalExpression(rootExpression, defaultValue, memberAccessors);
         }
 
         private static Expression MakeConditionalExpression(Expression expression, object defaultValue, IEnumerable<MemberExpression> memberExpressions)
