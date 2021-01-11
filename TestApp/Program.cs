@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using EfCoreExtensions.EncryptedMigration;
 using EfCoreExtensions.Searching;
+using Microsoft.EntityFrameworkCore;
 using TestApp.Entities;
 
 namespace TestApp
@@ -12,16 +13,15 @@ namespace TestApp
         {
             var dbContext = await CreateContextAndSeedDb();
 
-                
-
-            var usersQuery = dbContext.Users.SearchInTextProps("ivan", u => u.Mother.FirstName, u => u.Mother.LastName);
+            var usersQuery = dbContext.Users.Include(user => user.Mother)
+                .SearchInTextProps("ivan", u => u.Mother.FirstName, u => u.Mother.LastName);
         }
 
         private static async Task<AppDbContext> CreateContextAndSeedDb()
         {
             var dbContext = new AppDbContext();
             dbContext.Database.MigrateWithEncryptingMigrator();
-
+                
             dbContext.Users.RemoveRange(dbContext.Users);
             var user1 = dbContext.Users.Add(new User
             {
@@ -47,7 +47,6 @@ namespace TestApp
             await dbContext.SaveChangesAsync();
 
             user1.Mother = user3;
-            user2.Mother = user3;
             await dbContext.SaveChangesAsync();
 
             return dbContext;

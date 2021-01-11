@@ -36,20 +36,10 @@ namespace EfCoreExtensions.Searching
             var concatMethodInfo = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) });
 
             var expressionsToConcat = new List<Expression>();
-            foreach (MemberExpression prop in props.Select(p => p.Body))
+            foreach (var prop in props)
             {
-                var member = prop.Member;
-                // Check on null and build search substring for a property.
-                Expression valueExpression = Expression.MakeMemberAccess(parameter, member);
-                if (member.ReflectedType.IsClass)
-                {
-                    var isNullExpression = Expression.Equal(valueExpression, Expression.Constant(null));
-                    valueExpression = Expression.Condition(
-                        isNullExpression,
-                        Expression.Constant(string.Empty),
-                        Expression.Add(valueExpression, Expression.Constant(" "), concatMethodInfo));
-                }
-                expressionsToConcat.Add(valueExpression);
+                var safeMemberAccessExpression = ExpressionUtils.GetNestedMemberOrDefault(prop, string.Empty, parameter);
+                expressionsToConcat.Add(Expression.Add(safeMemberAccessExpression, Expression.Constant(" "), concatMethodInfo));
             }
             var searchStringExpression = expressionsToConcat.Aggregate((leftExpr, rightExpr) => Expression.Add(leftExpr, rightExpr, concatMethodInfo));
             if (!isCaseSensitive)
