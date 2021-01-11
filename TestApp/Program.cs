@@ -41,7 +41,7 @@ namespace TestApp
             }
 
             await dbContext.SaveChangesAsync();
-            var usersQuery = dbContext.Users.SearchInTextProps("Po", u => u.Nickname, u => u.Surname);
+            var usersQuery = dbContext.Users.SearchInTextProps("Max Pod", true, u => u.Nickname, u => u.Surname);
         }
     }
 }
